@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\dashboard\AudioController;
+use App\Http\Controllers\dashboard\CategoryController;
+use App\Http\Controllers\dashboard\ContentController;
+use App\Http\Controllers\dashboard\SubCategoryController;
+use App\Http\Controllers\dashboard\UserController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +20,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('home.dashboard');
+})->name('home');
+
+Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('home.dashboard');
+
+
+    //this dashboard route is protected by the auth middleware
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('sub-categories', SubCategoryController::class);
+    Route::resource('contents', ContentController::class);
+    Route::resource('audio', AudioController::class);
+
 });
+
+
+require __DIR__ . '/web/auth.php';

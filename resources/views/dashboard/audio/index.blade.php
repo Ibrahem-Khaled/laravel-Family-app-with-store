@@ -28,7 +28,13 @@
                     <tr>
                         <td>{{ $audio->id }}</td>
                         <td>{{ $audio->title }}</td>
-                        <td>{{ $audio->file }}</td>
+                        <td>
+                            <!-- مشغل الصوت -->
+                            <audio controls>
+                                <source src="{{ Storage::url($audio->file) }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </td>
                         <td>{{ $audio->duration }}</td>
                         <td>{{ $audio->subCategory->name }}</td>
                         <td>{{ $audio->user->name }}</td>
@@ -56,7 +62,8 @@
                                     <button type="button" class="btn-close" data-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('audio.update', $audio->id) }}" method="POST">
+                                <form action="{{ route('audio.update', $audio->id) }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <div class="modal-body">
@@ -89,8 +96,9 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="file">File</label>
-                                            <input type="text" name="file" class="form-control"
-                                                value="{{ $audio->file }}" required>
+                                            <input type="file" name="file" class="form-control">
+                                            <small>Current file: <a href="{{ Storage::url($audio->file) }}"
+                                                    target="_blank">{{ basename($audio->file) }}</a></small>
                                         </div>
                                         <div class="form-group">
                                             <label for="duration">Duration</label>
@@ -149,7 +157,7 @@
                     <h5 class="modal-title" id="createAudioModalLabel">Create New Audio</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('audio.store') }}" method="POST">
+                <form action="{{ route('audio.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -174,7 +182,7 @@
                         </div>
                         <div class="form-group">
                             <label for="file">File</label>
-                            <input type="text" name="file" class="form-control" required>
+                            <input type="file" name="file" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration</label>

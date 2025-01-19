@@ -19,6 +19,7 @@
                     <th>Type</th>
                     <th>Sub-Category</th>
                     <th>User</th>
+                    <th>Images</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -30,6 +31,15 @@
                         <td>{{ $content->type }}</td>
                         <td>{{ $content->subCategory->name }}</td>
                         <td>{{ $content->user->name }}</td>
+                        <td>
+                            @if ($content->images)
+                                @foreach (json_decode($content->images) as $image)
+                                    <img src="{{ Storage::url($image) }}" alt="Image" width="50" class="mr-2">
+                                @endforeach
+                            @else
+                                No Images
+                            @endif
+                        </td>
                         <td>
                             <!-- Button to trigger the Edit Content Modal -->
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -54,7 +64,8 @@
                                     <button type="button" class="btn-close" data-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('contents.update', $content->id) }}" method="POST">
+                                <form action="{{ route('contents.update', $content->id) }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <div class="modal-body">
@@ -114,9 +125,14 @@
                                                 value="{{ json_encode($content->sizes) }}">
                                         </div>
                                         <div class="form-group">
-                                            <label for="images">Images (JSON)</label>
-                                            <input type="text" name="images" class="form-control"
-                                                value="{{ json_encode($content->images) }}">
+                                            <label for="images">Images</label>
+                                            <input type="file" name="images[]" class="form-control" multiple>
+                                            @if ($content->images)
+                                                @foreach (json_decode($content->images) as $image)
+                                                    <img src="{{ Storage::url($image) }}" alt="Image" width="50"
+                                                        class="mr-2">
+                                                @endforeach
+                                            @endif
                                         </div>
                                         <div class="form-group">
                                             <label for="quantity">Quantity</label>
@@ -173,7 +189,7 @@
                     <h5 class="modal-title" id="createContentModalLabel">Create New Content</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('contents.store') }}" method="POST">
+                <form action="{{ route('contents.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -220,8 +236,8 @@
                             <input type="text" name="sizes" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="images">Images (JSON)</label>
-                            <input type="text" name="images" class="form-control">
+                            <label for="images">Images</label>
+                            <input type="file" name="images[]" class="form-control" multiple>
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity</label>

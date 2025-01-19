@@ -27,7 +27,13 @@
                         <td>{{ $category->id }}</td>
                         <td>{{ $category->name }}</td>
                         <td>{{ $category->slug }}</td>
-                        <td>{{ $category->image }}</td>
+                        <td>
+                            @if ($category->image)
+                                <img src="{{ Storage::url($category->image) }}" alt="{{ $category->name }}" width="100">
+                            @else
+                                No Image
+                            @endif
+                        </td>
                         <td>
                             <!-- Button to trigger the Edit Category Modal -->
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -53,7 +59,8 @@
                                     <button type="button" class="btn-close" data-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                <form action="{{ route('categories.update', $category->id) }}" method="POST">
+                                <form action="{{ route('categories.update', $category->id) }}" method="POST"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <div class="modal-body">
@@ -68,9 +75,12 @@
                                                 value="{{ $category->slug }}">
                                         </div>
                                         <div class="form-group">
-                                            <label for="image">Image URL</label>
-                                            <input type="text" name="image" class="form-control"
-                                                value="{{ $category->image }}">
+                                            <label for="image">Image</label>
+                                            <input type="file" name="image" class="form-control">
+                                            @if ($category->image)
+                                                <small>Current image: <img src="{{ Storage::url($category->image) }}"
+                                                        width="50"></small>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -122,7 +132,7 @@
                     <h5 class="modal-title" id="createCategoryModalLabel">Create New Category</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('categories.store') }}" method="POST">
+                <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
@@ -134,8 +144,8 @@
                             <input type="text" name="slug" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="image">Image URL</label>
-                            <input type="text" name="image" class="form-control">
+                            <label for="image">Image</label>
+                            <input type="file" name="image" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">

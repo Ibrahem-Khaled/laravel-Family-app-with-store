@@ -7,6 +7,7 @@ use App\Models\Content;
 use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ContentController extends Controller
 {
@@ -18,7 +19,6 @@ class ContentController extends Controller
         return view('dashboard.contents.index', compact('contents', 'subCategories', 'users'));
     }
 
-    // Store a new content
     public function store(Request $request)
     {
         $request->validate([
@@ -30,16 +30,36 @@ class ContentController extends Controller
             'price' => 'nullable|numeric',
             'colors' => 'nullable|json',
             'sizes' => 'nullable|json',
-            'images' => 'nullable|json',
+            'images' => 'nullable|array', // تغيير النوع إلى array
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // تأكد من أن الملفات هي صور
             'quantity' => 'nullable|integer',
         ]);
 
-        Content::create($request->all());
+        // رفع الصور وتخزينها
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePaths[] = $image->store('content_images', 'public');
+            }
+        }
+
+        // إنشاء تسجيل جديد في قاعدة البيانات
+        Content::create([
+            'sub_category_id' => $request->sub_category_id,
+            'user_id' => $request->user_id,
+            'type' => $request->type,
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'colors' => $request->colors,
+            'sizes' => $request->sizes,
+            'images' => json_encode($imagePaths), // حفظ مسارات الصور كـ JSON
+            'quantity' => $request->quantity,
+        ]);
 
         return redirect()->route('contents.index')->with('success', 'Content created successfully.');
     }
 
-    // Update a content
     public function update(Request $request, Content $content)
     {
         $request->validate([
@@ -51,18 +71,50 @@ class ContentController extends Controller
             'price' => 'nullable|numeric',
             'colors' => 'nullable|json',
             'sizes' => 'nullable|json',
-            'images' => 'nullable|json',
+            'images' => 'nullable|array', // تغيير النوع إلى array
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // يمكن أن يكون الملف غير مطلوب في التحديث
             'quantity' => 'nullable|integer',
         ]);
 
-        $content->update($request->all());
+        // إذا تم رفع صور جديدة
+        $imagePaths = json_decode($content->images, true) ?? [];
+        if ($request->hasFile('images')) {
+            // حذف الصور القديمة إذا كانت موجودة
+            foreach ($imagePaths as $imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            // رفع الصور الجديدة
+            $imagePaths = [];
+            foreach ($request->file('images') as $image) {
+                $imagePaths[] = $image->store('content_images', 'public');
+            }
+        }
+
+        $content->update([
+            'sub_category_id' => $request->sub_category_id,
+            'user_id' => $request->user_id,
+            'type' => $request->type,
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'colors' => $request->colors,
+            'sizes' => $request->sizes,
+            'images' => json_encode($imagePaths), // حفظ مسارات الصور كـ JSON
+            'quantity' => $request->quantity,
+        ]);
 
         return redirect()->route('contents.index')->with('success', 'Content updated successfully.');
     }
 
-    // Delete a content
     public function destroy(Content $content)
     {
+        // حذف الصور المرتبطة إذا كانت موجودة
+        $imagePaths = json_decode($content->images, true) ?? [];
+        foreach ($imagePaths as $imagePath) {
+            Storage::disk('public')->delete($imagePath);
+        }
+
         $content->delete();
         return redirect()->route('contents.index')->with('success', 'Content deleted successfully.');
     }

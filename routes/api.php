@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\homeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route to get all categories
+Route::get('/categories', [HomeController::class, 'getCategories']);
+
+// Route to get a specific category by ID
+Route::get('/categories/{id}', [HomeController::class, 'getCategory']);
+
+// Route to get random contents
+Route::get('/contents/random', [HomeController::class, 'getRandomContents']);
+
+// Route to get a specific content by ID
+Route::get('/contents/{id}', [HomeController::class, 'getContent']);
+
+// Route to get a sub-category by ID
+Route::get('/sub-categories/{id}', [HomeController::class, 'getSubCategory']);
+
+// Route to get all audios
+Route::get('/audios', [HomeController::class, 'getAudios']);

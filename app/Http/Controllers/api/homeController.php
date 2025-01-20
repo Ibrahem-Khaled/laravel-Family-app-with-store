@@ -132,23 +132,13 @@ class HomeController extends Controller
         return response()->json($subCategory);
     }
 
-    public function getAudios()
+    public function getAudios($id)
     {
-        $audios = Audio::with(['subCategory', 'user'])->get();
-        if ($audios->isEmpty()) {
+        $subCategory = SubCategory::with('audios')->find($id);
+        if ($subCategory->isEmpty()) {
             return response()->json(['message' => 'No audios found'], 404);
         }
-
-        // إضافة رابط الصورة الكاملة لكل ملف صوتي
-        $audios->transform(function ($audio) {
-            if ($audio->image) {
-                $audio->file_url = Storage::url($audio->file);
-            } else {
-                $audio->file_url = null;
-            }
-            return $audio;
-        });
-
+        $audios = $subCategory->audios;
         return response()->json($audios);
     }
 

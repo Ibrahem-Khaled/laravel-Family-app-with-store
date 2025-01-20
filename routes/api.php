@@ -32,3 +32,4 @@ Route::get('/sub-categories/{id}', [HomeController::class, 'getSubCategory']);
 
 // Route to get all audios
 Route::get('/audios', [HomeController::class, 'getAudios']);
+Route::get('/getSubCategories/audio', [HomeController::class, 'getSubCategoriesAudios']);

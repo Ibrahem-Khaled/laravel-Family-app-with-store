@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Audio;
 use App\Models\Category;
 use App\Models\Content;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -149,5 +150,15 @@ class HomeController extends Controller
         });
 
         return response()->json($audios);
+    }
+
+    public function getSubCategoriesAudios()
+    {
+        $subCategories = SubCategory::whereHas('audios')->with('audios')->get();
+        if ($subCategories->isEmpty()) {
+            return response()->json(['message' => 'No sub-categories with audios found'], 404);
+        }
+
+        return response()->json($subCategories);
     }
 }

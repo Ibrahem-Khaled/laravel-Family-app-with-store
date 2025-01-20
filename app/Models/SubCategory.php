@@ -25,4 +25,9 @@ class SubCategory extends Model
     {
         return $this->hasMany(Content::class);
     }
+
+    public function audios()
+    {
+        return $this->hasMany(Audio::class);
+    }
 }

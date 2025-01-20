@@ -132,17 +132,26 @@ class HomeController extends Controller
         return response()->json($subCategory);
     }
 
-    public function getAudios($id)
+    public function getAudios($id = null)
     {
-        if (!$id) {
-            return response()->json(Audio::with('subCategory', 'user')->get());
+        if (is_null($id)) {
+            // إذا لم يتم تقديم id، قم بإرجاع جميع الـ Audios مع العلاقات
+            $audios = Audio::with('subCategory', 'user')->get();
+            return response()->json($audios);
         }
+
+        // إذا تم تقديم id، قم بالبحث عن الـ SubCategory والـ Audios المرتبطة بها
         $subCategory = SubCategory::with('audios')->find($id);
-        if ($subCategory->isEmpty()) {
-            return response()->json(['message' => 'No audios found'], 404);
+
+        if (!$subCategory) {
+            return response()->json(['message' => 'No subcategory found'], 404);
         }
-        $audios = $subCategory->audios;
-        return response()->json($audios);
+
+        if ($subCategory->audios->isEmpty()) {
+            return response()->json(['message' => 'No audios found for this subcategory'], 404);
+        }
+
+        return response()->json($subCategory->audios);
     }
 
     public function getSubCategoriesAudios()

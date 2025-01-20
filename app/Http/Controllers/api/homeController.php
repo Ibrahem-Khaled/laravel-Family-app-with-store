@@ -134,6 +134,9 @@ class HomeController extends Controller
 
     public function getAudios($id)
     {
+        if (!$id) {
+            return response()->json(Audio::with('subCategory', 'user')->get());
+        }
         $subCategory = SubCategory::with('audios')->find($id);
         if ($subCategory->isEmpty()) {
             return response()->json(['message' => 'No audios found'], 404);

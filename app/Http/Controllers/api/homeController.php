@@ -89,16 +89,6 @@ class HomeController extends Controller
             return response()->json(['message' => 'Content not found'], 404);
         }
 
-        // إضافة روابط الصور الكاملة للمحتوى
-        if ($content->images) {
-            $content->images = json_decode($content->images);
-            $content->images = array_map(function ($image) {
-                return Storage::url($image);
-            }, $content->images);
-        } else {
-            $content->images = [];
-        }
-
         return response()->json($content);
     }
 

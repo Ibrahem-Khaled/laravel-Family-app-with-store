@@ -28,8 +28,6 @@ class ContentController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric',
-            'colors' => 'nullable|json',
-            'sizes' => 'nullable|json',
             'images' => 'nullable|array', // تغيير النوع إلى array
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // تأكد من أن الملفات هي صور
             'quantity' => 'nullable|integer',
@@ -51,8 +49,8 @@ class ContentController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
-            'colors' => $request->colors,
-            'sizes' => $request->sizes,
+            'colors' => json_encode($request->colors),
+            'sizes' => json_encode($request->sizes),
             'images' => json_encode($imagePaths), // حفظ مسارات الصور كـ JSON
             'quantity' => $request->quantity,
         ]);
@@ -69,8 +67,6 @@ class ContentController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric',
-            'colors' => 'nullable|json',
-            'sizes' => 'nullable|json',
             'images' => 'nullable|array', // تغيير النوع إلى array
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // يمكن أن يكون الملف غير مطلوب في التحديث
             'quantity' => 'nullable|integer',
@@ -98,8 +94,8 @@ class ContentController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
-            'colors' => $request->colors,
-            'sizes' => $request->sizes,
+            'colors' => json_encode($request->colors),
+            'sizes' => json_encode($request->sizes),
             'images' => json_encode($imagePaths), // حفظ مسارات الصور كـ JSON
             'quantity' => $request->quantity,
         ]);

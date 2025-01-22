@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->enum('type', ['article', 'product'])->default('article');
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->float('price')->nullable();
             $table->json('colors')->nullable();
             $table->json('sizes')->nullable();

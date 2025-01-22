@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'token', // استخدام token كـ driver
+            'provider' => 'users', // استخدام جدول users كـ provider
+            'hash' => false, // إذا كان التوكن مشفر في الداتابيز، ضعها `true`
+        ],
     ],
 
     /*

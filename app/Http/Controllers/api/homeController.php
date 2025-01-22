@@ -12,20 +12,43 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
-    public function getCategories()
+    public function getCategoriesContentOnly($type = 'article')
     {
-        $categories = Category::all();
+        // جلب الفئات الرئيسية التي تحتوي على فئات فرعية لها محتوى من النوع المحدد
+        $categories = Category::whereHas('subcategories.contents', function ($query) use ($type) {
+            $query->where('type', $type);
+        })->with([
+                    'subcategories' => function ($query) use ($type) {
+                        // جلب الفئات الفرعية التي تحتوي على محتوى من النوع المحدد
+                        $query->whereHas('contents', function ($query) use ($type) {
+                            $query->where('type', $type);
+                        });
+                    }
+                ])->get();
+
+        // إذا لم يتم العثور على فئات
         if ($categories->isEmpty()) {
-            return response()->json(['message' => 'No categories found'], 404);
+            return response()->json(['message' => "No categories found with $type content in subcategories"], 404);
         }
 
-        // إضافة رابط الصورة الكاملة لكل فئة
+        // إضافة رابط الصورة الكاملة لكل فئة رئيسية وفرعية
         $categories->transform(function ($category) {
             if ($category->image) {
                 $category->image_url = Storage::url($category->image);
             } else {
                 $category->image_url = null;
             }
+
+            // إضافة رابط الصورة الكاملة للفئات الفرعية
+            $category->subcategories->transform(function ($subcategory) {
+                if ($subcategory->image) {
+                    $subcategory->image_url = Storage::url($subcategory->image);
+                } else {
+                    $subcategory->image_url = null;
+                }
+                return $subcategory;
+            });
+
             return $category;
         });
 
@@ -59,9 +82,12 @@ class HomeController extends Controller
         return response()->json($category);
     }
 
-    public function getRandomContents()
+    public function getContents()
     {
-        $contents = Content::inRandomOrder()->limit(5)->with(['subCategory', 'user'])->get();
+        $contents = Content::limit(5)->with(['subCategory', 'user'])
+            ->where('type', 'article')
+            ->latest()
+            ->get();
         if ($contents->isEmpty()) {
             return response()->json(['message' => 'No contents found'], 404);
         }
@@ -80,6 +106,33 @@ class HomeController extends Controller
         });
 
         return response()->json($contents);
+    }
+
+
+    public function getProducts()
+    {
+        $products = Content::limit(5)->with(['subCategory', 'user'])
+            ->where('type', 'product')
+            ->latest()
+            ->get();
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No products found'], 404);
+        }
+
+        //إضافة رابط الصورة الكاملة للمحتوى
+        $products->transform(function ($product) {
+            if ($product->images) {
+                $product->images = json_decode($product->images);
+                $product->images = array_map(function ($image) {
+                    return Storage::url($image);
+                }, $product->images);
+            } else {
+                $product->images = [];
+            }
+            return $product;
+        });
+
+        return response()->json($products);
     }
 
     public function getContent($id)
@@ -104,7 +157,7 @@ class HomeController extends Controller
 
     public function getSubCategory($id)
     {
-        $subCategory = Category::with('contents')->find($id);
+        $subCategory = SubCategory::with('contents.user')->find($id);
         if (!$subCategory) {
             return response()->json(['message' => 'Sub-category not found'], 404);
         }

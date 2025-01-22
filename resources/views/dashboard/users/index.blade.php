@@ -33,7 +33,13 @@
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->phone }}</td>
-                        <td>{{ $user->avatar }}</td>
+                        <td>
+                            @if ($user->avatar)
+                                <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}" width="50">
+                            @else
+                                No Avatar
+                            @endif
+                        </td>
                         <td>{{ $user->address }}</td>
                         <td>{{ $user->role }}</td>
                         <td>
@@ -85,9 +91,8 @@
                                                 value="{{ $user->phone }}">
                                         </div>
                                         <div class="form-group">
-                                            <label for="avatar">Avatar URL</label>
-                                            <input type="text" name="avatar" class="form-control"
-                                                value="{{ $user->avatar }}">
+                                            <label for="avatar">upload avatar</label>
+                                            <input type="file" name="avatar" class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <label for="address">Address</label>

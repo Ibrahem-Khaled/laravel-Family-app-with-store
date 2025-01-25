@@ -9,6 +9,8 @@
             إنشاء منشور جديد
         </button>
 
+        @include('components.alerts')
+
         <!-- جدول لعرض البيانات -->
         <table class="table mt-3">
             <thead>

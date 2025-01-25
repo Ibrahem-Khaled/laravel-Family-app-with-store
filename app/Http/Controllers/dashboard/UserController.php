@@ -26,7 +26,7 @@ class UserController extends Controller
             'avatar' => 'nullable',
             'address' => 'nullable',
             'password' => 'required|min:6',
-            'role' => 'required|in:admin,user,creator',
+            'role' => 'required|in:admin,user,creator,family',
         ]);
 
         User::create($request->all());
@@ -45,7 +45,7 @@ class UserController extends Controller
             'avatar' => 'nullable',
             'address' => 'nullable',
             'password' => 'nullable|min:6',
-            'role' => 'required|in:admin,user,creator',
+            'role' => 'required|in:admin,user,creator,family',
         ]);
 
         $user->update($request->all());

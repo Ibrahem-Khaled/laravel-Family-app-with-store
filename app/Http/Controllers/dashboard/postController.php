@@ -4,6 +4,7 @@ namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,13 +13,15 @@ class postController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('dashboard.posts', compact('posts'));
+        $users = User::where('role', 'family')->get();
+        return view('dashboard.posts', compact('posts', 'users'));
     }
 
     public function store(Request $request)
     {
         // التحقق من البيانات
         $request->validate([
+            'user_id' => 'required|exists:users,id', // التأكد من أن المستخدم المحدد موجود
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -46,7 +49,7 @@ class postController extends Controller
 
         // إنشاء المنشور
         Post::create([
-            'user_id' => auth()->id(), // المستخدم الحالي
+            'user_id' => $request->user_id, // استخدام المستخدم المحدد
             'title' => $request->title,
             'description' => $request->description,
             'images' => json_encode($images),
@@ -56,7 +59,6 @@ class postController extends Controller
 
         return redirect()->route('posts.index')->with('success', 'تم إنشاء المنشور بنجاح.');
     }
-
 
     public function update(Request $request, Post $post)
     {

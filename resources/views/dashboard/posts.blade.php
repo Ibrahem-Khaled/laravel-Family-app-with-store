@@ -42,8 +42,7 @@
                         <td>{{ $post->status }}</td>
                         <td>
                             <!-- زر التعديل -->
-                            <button class="btn btn-primary" data-toggle="modal"
-                                data-target="#editModal{{ $post->id }}">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#editModal{{ $post->id }}">
                                 تعديل
                             </button>
                             <!-- زر الحذف -->
@@ -133,6 +132,14 @@
                         <!-- Form للإضافة -->
                         <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            <div class="mb-3">
+                                <label for="user_id" class="form-label">اختر المستخدم</label>
+                                <select name="user_id" id="user_id" class="form-control" required>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="title" class="form-label">العنوان</label>
                                 <input type="text" name="title" id="title" class="form-control" required>

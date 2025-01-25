@@ -106,12 +106,15 @@
                                         <div class="form-group">
                                             <label for="role">Role</label>
                                             <select name="role" class="form-control" required>
+
                                                 <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User
                                                 </option>
                                                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin
                                                 </option>
                                                 <option value="creator" {{ $user->role == 'creator' ? 'selected' : '' }}>
                                                     Creator</option>
+                                               <option value="family" {{ $user->role == 'family' ? 'selected' : '' }}>
+                                                    Family</option> 
                                             </select>
                                         </div>
                                     </div>
@@ -200,6 +203,7 @@
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
                                 <option value="creator">Creator</option>
+                                <option value="family">Family</option>
                             </select>
                         </div>
                     </div>

@@ -3,6 +3,8 @@
 use App\Http\Controllers\dashboard\AudioController;
 use App\Http\Controllers\dashboard\CategoryController;
 use App\Http\Controllers\dashboard\ContentController;
+use App\Http\Controllers\dashboard\HistoryFamilyController;
+use App\Http\Controllers\dashboard\postController;
 use App\Http\Controllers\dashboard\SubCategoryController;
 use App\Http\Controllers\dashboard\UserController;
 use App\Http\Controllers\HomeController;
@@ -33,6 +35,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::resource('sub-categories', SubCategoryController::class);
     Route::resource('contents', ContentController::class);
     Route::resource('audio', AudioController::class);
+    Route::resource('history-families', HistoryFamilyController::class);
+    Route::resource('posts', postController::class);
 
 });
 

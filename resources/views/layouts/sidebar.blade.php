@@ -59,6 +59,11 @@
             <i class="fas fa-fw fa-microphone"></i>
             <span>الصوتيات</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('subscriptions.index') }}">
+            <i class="fas fa-fw fa-hand-holding-usd"></i>
+            <span>ادارة العضويات</span></a>
+    </li>
    
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\dashboard\ContentController;
 use App\Http\Controllers\dashboard\HistoryFamilyController;
 use App\Http\Controllers\dashboard\postController;
 use App\Http\Controllers\dashboard\SubCategoryController;
+use App\Http\Controllers\dashboard\SubscriptionController;
 use App\Http\Controllers\dashboard\UserController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,10 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::resource('audio', AudioController::class);
     Route::resource('history-families', HistoryFamilyController::class);
     Route::resource('posts', postController::class);
-
+    
+    Route::resource('subscriptions', SubscriptionController::class);
+    Route::post('subscriptions/{subscription}/add-user', [SubscriptionController::class, 'addUser'])->name('subscriptions.addUser');
+    Route::post('subscriptions/{subscription}/remove-user', [SubscriptionController::class, 'removeUser'])->name('subscriptions.removeUser');
 });
 
 

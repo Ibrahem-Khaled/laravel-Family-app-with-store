@@ -25,7 +25,7 @@ class postController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'videos.*' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
+            'videos.*' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg',
             'status' => 'required|in:draft,published,banned',
         ]);
 
@@ -67,7 +67,7 @@ class postController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'videos.*' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
+            'videos.*' => 'nullable|mimetypes:video/mp4,video/avi,video/mpeg',
             'status' => 'required|in:draft,published,banned',
         ]);
 

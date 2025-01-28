@@ -7,6 +7,7 @@ use App\Models\Audio;
 use App\Models\Category;
 use App\Models\Content;
 use App\Models\SubCategory;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -215,5 +216,11 @@ class HomeController extends Controller
         }
 
         return response()->json($subCategories);
+    }
+
+    public function getSubscriptions()
+    {
+        $subscriptions = Subscription::all();
+        return response()->json($subscriptions);
     }
 }

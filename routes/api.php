@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\authController;
+use App\Http\Controllers\api\familyController;
 use App\Http\Controllers\api\homeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,11 @@ Route::get('/sub-categories/{id}', [HomeController::class, 'getSubCategory']);
 // Route to get all audios
 Route::get('/audios/{id?}', [HomeController::class, 'getAudios']);
 Route::get('/getSubCategories/audio', [HomeController::class, 'getSubCategoriesAudios']);
+
+// Route to get all subscriptions
+Route::get('/subscriptions', [HomeController::class, 'getSubscriptions']);
+
+// Route to get all Family and Family History
+Route::get('/family', [familyController::class, 'index']);
+Route::get('/family/{userId}', [familyController::class, 'getFamily']);
+Route::post('/storePostInUserFamily', [familyController::class, 'storePostInUserFamily']);

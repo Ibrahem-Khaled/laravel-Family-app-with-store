@@ -30,13 +30,13 @@
                         <td>{{ $post->description }}</td>
                         <td>
                             @foreach (json_decode($post->images, true) ?? [] as $image)
-                                <img src="{{ Storage::url($image) }}" alt="صورة" width="100">
+                                <img src="{{ $image }}" alt="صورة" width="100">
                             @endforeach
                         </td>
                         <td>
                             @foreach (json_decode($post->videos, true) ?? [] as $video)
                                 <video width="100" controls>
-                                    <source src="{{ Storage::url($video) }}" type="video/mp4">
+                                    <source src="{{ $video }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             @endforeach

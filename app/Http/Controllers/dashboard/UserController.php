@@ -47,7 +47,7 @@ class UserController extends Controller
             'password' => 'nullable|min:6',
             'role' => 'required|in:admin,user,creator,family',
         ]);
-
+        $request->merge(['password' => bcrypt($request->password)]);
         $user->update($request->all());
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');

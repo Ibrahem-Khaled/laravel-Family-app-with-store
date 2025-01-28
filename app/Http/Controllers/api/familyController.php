@@ -24,10 +24,33 @@ class familyController extends Controller
 
     public function getFamily($userId)
     {
-        $family = User::findOrFail($userId)->load('posts');
-        return response()->json($family);
-    }
+        // تحميل المستخدم مع المنشورات المرتبطة به
+        $user = User::findOrFail($userId);
 
+        // تحميل المنشورات مع الصور والفيديوهات
+        $user->load([
+            'posts' => function ($query) {
+                $query->select('id', 'user_id', 'title', 'description', 'images', 'videos', 'status', 'created_at');
+            }
+        ]);
+
+        // تحويل الصور والفيديوهات إلى روابط كاملة
+        $user->posts->each(function ($post) {
+            if ($post->images) {
+                $post->images = array_map(function ($image) {
+                    return asset('storage/' . $image); // تعديل المسار حسب مكان تخزين الصور
+                }, json_decode($post->images, true));
+            }
+
+            if ($post->videos) {
+                $post->videos = array_map(function ($video) {
+                    return asset('storage/' . $video); // تعديل المسار حسب مكان تخزين الفيديوهات
+                }, json_decode($post->videos, true));
+            }
+        });
+
+        return response()->json($user);
+    }
     public function storePostInUserFamily(Request $request)
     {
         // التحقق من صحة البيانات

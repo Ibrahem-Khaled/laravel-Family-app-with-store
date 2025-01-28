@@ -41,4 +41,9 @@ class User extends Authenticatable
             ->withPivot('active', 'start_at', 'end_at')
             ->withTimestamps();
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

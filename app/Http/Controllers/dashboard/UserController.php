@@ -28,7 +28,7 @@ class UserController extends Controller
             'password' => 'required|min:6',
             'role' => 'required|in:admin,user,creator,family',
         ]);
-
+        $request->merge(['password' => bcrypt($request->password)]);
         User::create($request->all());
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');

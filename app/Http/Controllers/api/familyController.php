@@ -21,7 +21,6 @@ class familyController extends Controller
             'families' => $families,
         ]);
     }
-
     public function getFamily($userId)
     {
         // تحميل المستخدم مع المنشورات المرتبطة به
@@ -38,13 +37,13 @@ class familyController extends Controller
         $user->posts->each(function ($post) {
             if ($post->images) {
                 $post->images = array_map(function ($image) {
-                    return asset('storage/' . $image); // تعديل المسار حسب مكان تخزين الصور
+                    return asset($image); // استخدام المسار المخزن كما هو
                 }, json_decode($post->images, true));
             }
 
             if ($post->videos) {
                 $post->videos = array_map(function ($video) {
-                    return asset('storage/' . $video); // تعديل المسار حسب مكان تخزين الفيديوهات
+                    return asset($video); // استخدام المسار المخزن كما هو
                 }, json_decode($post->videos, true));
             }
         });

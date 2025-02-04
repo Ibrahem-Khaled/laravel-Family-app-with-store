@@ -219,14 +219,11 @@ class HomeController extends Controller
         return response()->json($subCategories);
     }
 
-    public function getSubscriptions(Request $request)
+    public function getSubscriptions(User $user = null)
     {
-        $token = $request->bearerToken(); // للحصول على التوكن من Authorization header
-
         $subscriptions = Subscription::all();
 
-        if ($token) {
-            $user = User::where('api_token', $token)->first();
+        if ($user) {
 
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);

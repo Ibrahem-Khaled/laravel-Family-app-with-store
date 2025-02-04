@@ -38,7 +38,7 @@ Route::get('/audios/{id?}', [HomeController::class, 'getAudios']);
 Route::get('/getSubCategories/audio', [HomeController::class, 'getSubCategoriesAudios']);
 
 // Route to get all subscriptions
-Route::get('/subscriptions', [HomeController::class, 'getSubscriptions']);
+Route::get('/subscriptions/{user?}', [HomeController::class, 'getSubscriptions']);
 
 // Route to get all Family and Family History
 Route::get('/family', [familyController::class, 'index']);

@@ -43,6 +43,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::post('subscriptions/{subscription}/add-user', [SubscriptionController::class, 'addUser'])->name('subscriptions.addUser');
     Route::post('subscriptions/{subscription}/remove-user', [SubscriptionController::class, 'removeUser'])->name('subscriptions.removeUser');
 });
-
+ 
 
 require __DIR__ . '/web/auth.php';

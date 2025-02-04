@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -43,10 +42,9 @@ class User extends Authenticatable
         parent::boot();
 
         static::creating(function ($model) {
-            $model->uuid = Str::random(11); // إنشاء uuid عشوائي مكون من 11 حرف/رقم
+            $model->uuid = mt_rand(10000000000, 99999999999); // رقم عشوائي مكون من 11 رقمًا
         });
     }
-
     public function subscriptions()
     {
         return $this->belongsToMany(Subscription::class, 'user_subscriptions')

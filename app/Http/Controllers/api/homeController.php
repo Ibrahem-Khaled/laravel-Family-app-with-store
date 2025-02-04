@@ -219,7 +219,7 @@ class HomeController extends Controller
         return response()->json($subCategories);
     }
 
-    public function getSubscriptions($token = null)
+    public function getSubscriptions(?string $token)
     {
         $subscriptions = Subscription::all();
 

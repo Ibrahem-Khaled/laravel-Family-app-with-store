@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Content;
 use App\Models\SubCategory;
 use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -218,9 +219,26 @@ class HomeController extends Controller
         return response()->json($subCategories);
     }
 
-    public function getSubscriptions()
+    public function getSubscriptions($token = null)
     {
         $subscriptions = Subscription::all();
+
+        if ($token) {
+            $user = User::where('api_token', $token)->first();
+
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+
+            $userSubscription = $user->subscriptions()->latest()->first();
+
+            if (!$userSubscription) {
+                return response()->json($subscriptions);
+            }
+
+            return response()->json($userSubscription);
+        }
+
         return response()->json($subscriptions);
     }
 }

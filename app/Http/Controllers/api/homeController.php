@@ -219,8 +219,10 @@ class HomeController extends Controller
         return response()->json($subCategories);
     }
 
-    public function getSubscriptions(?string $token)
+    public function getSubscriptions(Request $request)
     {
+        $token = $request->bearerToken(); // للحصول على التوكن من Authorization header
+
         $subscriptions = Subscription::all();
 
         if ($token) {
